@@ -22,11 +22,11 @@ egame.start = () => {
     $(".gui-main").css({
         "margin-top": "0px",
         "padding-top": "15px",
-        "z-index": "77777",
+        "z-index": "77",
         "margin-left": "20px"
     });
-    $(".e-starWars").css({
-        "z-index": "1002"
+    $(".gui-navbar").css({
+        "z-index": "43"
     });
     $(".gui-navbar-container").css({
         "margin-right": "0px"
