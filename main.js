@@ -2,22 +2,37 @@ var egame = {};
 
 var style = { "display": "none" };
 
+var ele_list = [
+    ".fl", 
+    ".live-list-guess",
+    ".nav-recharge", 
+    ".live-review:eq(1)",
+    ".gui-navbar-attention", 
+    ".gui-left",
+    ".gui-navbar-anchor", 
+    "ul.row2",
+    ".live-panel-luxury-result", 
+    "div.panel-player-recommond-right",
+    "div[class='live-list-player-recommond oneway']"
+];
+var class_list = [
+    ".icon-activity{display:none;}",
+    ".img-level{display:none;}",
+    ".chat-msg-gift{display:none;}",
+    ".panel-mount{display:none}",
+    ".combo-wrap,.combo-wrap1{display:none}",
+    "._danmaku_comment_node .barrage-info{display:none}"
+]
 
 egame.start = () => {
     //聊天区清理
-    document.styleSheets[0].insertRule(".icon-activity{display:none;}", 0);
-    document.styleSheets[0].insertRule(".img-level{display:none;}", 0);
-    document.styleSheets[0].insertRule(".chat-msg-gift{display:none;}"), 0;
-    document.styleSheets[0].insertRule(".panel-mount{display:none}", 0);
-    document.styleSheets[0].insertRule(".combo-wrap,.combo-wrap1{display:none}", 0);
-    document.styleSheets[0].insertRule("._danmaku_comment_node .barrage-info{display:none}");
+    for (var i in class_list) {
+        document.styleSheets[0].insertRule(class_list[i]);
+    }
     //多余元素清理
-    $(".fl,.nav-recharge,.gui-navbar-attention,.gui-navbar-anchor").css(style);
-    $(".live-list-guess").css(style);
-    $(".live-review:eq(1)").css(style);
-    $(".gui-left").css(style);
-    $("ul.row2").css(style);
-    $("div.panel-player-recommond-right").css(style)
+    for (var i in ele_list) {
+        $(ele_list[i]).css(style);
+    }
     //调整位置
     $(".gui-main").css({
         "margin-top": "0px",
@@ -32,7 +47,7 @@ egame.start = () => {
         "margin-right": "0px"
     });
     $(".searchbar>input").css({
-        "width":"88px"
+        "width": "88px"
     });
     $("div.live-list-player-recommond").css({
         "bottom": "0px",
@@ -44,4 +59,19 @@ egame.start = () => {
     $("i.live-right-bubble").click();
     //50ms 后重新展开
     setTimeout("$('i.live-right-bubble').click();", 50);
+
+    //净化弹幕与聊天区
+    var r = /(.*)+(坐着|开通)(.*)+(光临本直播间|守护)/;
+    r = r.compile(r);
+    $("ul.vb-content").bind("DOMNodeInserted", DOMNodeInserted("li.chat-msg-other"));
+    $(".barage-container").bind("DOMNodeInserted", DOMNodeInserted("._danmaku_comment_node"));
+    
+    function DOMNodeInserted(selector) {
+        $(this).find(selector).each(function (index, item) {
+            var text = $(item).find("span[style]:last") == null ? "" : $(item).find("span[style]:last").text();
+            if (text && r.test(text)) {
+                $(document).remove($(item));
+            }
+        });
+    }
 }
