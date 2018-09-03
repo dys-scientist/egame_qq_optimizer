@@ -3,29 +3,30 @@ var egame = {};
 var style = { "display": "none" };
 
 var ele_list = [
-    ".fl", 
-    ".live-list-guess",
-    ".nav-recharge", 
-    ".live-review:eq(1)",
-    ".gui-navbar-attention", 
-    ".gui-left",
-    ".gui-navbar-anchor", 
-    "ul.row2",
+    ".fl", //nav栏左侧
+    ".live-list-guess",//底部推荐直播
+    ".nav-recharge", //充值按钮
+    ".live-review:eq(1)",//底部推荐视频区
+    ".gui-navbar-attention", //我的关注按钮
+    ".gui-left",//左侧分类区
+    ".gui-navbar-anchor", //主播中心按钮
     ".live-panel-luxury-result", 
-    "div.panel-player-recommond-right",
-    "div[class='live-list-player-recommond oneway']"
+    "div.panel-player-recommond-right",//企鹅二维码
+    "ul.row2",//其他直播推荐
+    "div[class='live-list-player-recommond oneway']"//其他直播推荐
 ];
 var class_list = [
-    ".icon-activity{display:none;}",
-    ".img-level{display:none;}",
-    ".chat-msg-gift{display:none;}",
-    ".panel-mount{display:none}",
-    ".combo-wrap,.combo-wrap1{display:none}",
-    "._danmaku_comment_node .barrage-info{display:none}"
+    ".icon-activity{display:none;}",//头衔图标
+    ".img-level{display:none;}",//等级图标
+    ".chat-msg-gift{display:none;}",//送礼提示
+    ".panel-mount{display:none;}",//进场坐骑展示区
+    ".combo-wrap,.combo-wrap1{display:none;}",//系统广播横幅
+    "._danmaku_comment_node .barrage-info{display:none;}"//弹幕送礼提示
 ]
 
 egame.start = () => {
     //聊天区清理
+    //覆盖样式
     for (var i in class_list) {
         document.styleSheets[0].insertRule(class_list[i]);
     }
@@ -65,7 +66,7 @@ egame.start = () => {
     r = r.compile(r);
     $("ul.vb-content").bind("DOMNodeInserted", DOMNodeInserted("li.chat-msg-other"));
     $(".barage-container").bind("DOMNodeInserted", DOMNodeInserted("._danmaku_comment_node"));
-    
+
     function DOMNodeInserted(selector) {
         $(this).find(selector).each(function (index, item) {
             var text = $(item).find("span[style]:last") == null ? "" : $(item).find("span[style]:last").text();
