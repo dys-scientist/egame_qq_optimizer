@@ -1,6 +1,7 @@
 var egame = {};
 
-var style = { "display": "none" };
+egame.r = /(.*)+(坐着|开通|下注了)(.*)+(光临本直播间|守护|金币)/;
+//var style = { "display": "none" };
 
 var ele_list = [
     ".fl", //nav栏左侧
@@ -10,10 +11,13 @@ var ele_list = [
     ".gui-navbar-attention", //我的关注按钮
     ".gui-left",//左侧分类区
     ".gui-navbar-anchor", //主播中心按钮
-    ".live-panel-luxury-result", 
+    ".live-panel-luxury-result",
     "div.panel-player-recommond-right",//企鹅二维码
     "ul.row2",//其他直播推荐
-    "div[class='live-list-player-recommond oneway']"//其他直播推荐
+    "div[class='live-list-player-recommond oneway']",//其他直播推荐
+    "div.my-container > div > div:nth-child(3)",//系统公告横幅
+    "img.icon-activity",//头衔图标
+    "img.img-level"//等级图标
 ];
 var class_list = [
     ".icon-activity{display:none;}",//头衔图标
@@ -21,8 +25,8 @@ var class_list = [
     ".chat-msg-gift{display:none;}",//送礼提示
     ".panel-mount{display:none;}",//进场坐骑展示区
     ".combo-wrap,.combo-wrap1{display:none;}",//系统广播横幅
-    "._danmaku_comment_node .barrage-info{display:none;}"//弹幕送礼提示
-]
+    "._danmaku_comment_node .barrage-info{display:none;}",//弹幕送礼提示
+];
 
 egame.start = () => {
     //聊天区清理
@@ -32,7 +36,7 @@ egame.start = () => {
     }
     //多余元素清理
     for (var i in ele_list) {
-        $(ele_list[i]).css(style);
+        $(ele_list[i]).remove();
     }
     //调整位置
     $(".gui-main").css({
@@ -62,17 +66,22 @@ egame.start = () => {
     setTimeout("$('i.live-right-bubble').click();", 50);
 
     //净化弹幕与聊天区
-    var r = /(.*)+(坐着|开通)(.*)+(光临本直播间|守护)/;
-    r = r.compile(r);
-    $("ul.vb-content").bind("DOMNodeInserted", DOMNodeInserted("li.chat-msg-other"));
-    $(".barage-container").bind("DOMNodeInserted", DOMNodeInserted("._danmaku_comment_node"));
-
-    function DOMNodeInserted(selector) {
-        $(this).find(selector).each(function (index, item) {
-            var text = $(item).find("span[style]:last") == null ? "" : $(item).find("span[style]:last").text();
-            if (text && r.test(text)) {
-                $(document).remove($(item));
-            }
-        });
-    }
+    egame.DOMNodeListener("div.chat-content ul.vb-content");
+    egame.DOMNodeListener("div.my-container div.barage-container > div");
+}
+egame.DOMNodeListener = (selector) => {
+    let mutation = new MutationObserver((mutations,instence)=>{
+        mutations.forEach((item)=>{
+            item.addedNodes.forEach((node)=>{
+                var text = $(node).find("span[style]:last") == null ? "" : $(node).find("span[style]:last").text();
+                if (text && egame.r.test(text)) {
+                    $(node).remove();
+                }
+            })
+        })
+    });
+    let ele = document.querySelector(selector);
+    mutation.observe(ele,{
+        childList: true
+    })
 }
