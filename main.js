@@ -64,20 +64,20 @@ egame.start = () => {
     setTimeout("$('i.live-right-bubble').click();", 50);
 
     //净化弹幕与聊天区
-    //egame.DOMNodeListener("div.chat-content ul.vb-content");
-    //egame.DOMNodeListener("div.my-container div.barage-container > div");
+    egame.DOMNodeListener("div.chat-content ul.vb-content");
+    egame.DOMNodeListener("div.my-container div.barage-container > div");
 }
 egame.DOMNodeListener = (selector) => {
     let r = /(.*)+(坐着|开通|下注了)(.*)+(光临本直播间|守护|金币)/;
     let mutation = new MutationObserver((mutations,instence)=>{
         mutations.forEach((item)=>{
             item.addedNodes.forEach((node)=>{
-                var text = $(node).find("span[style]:last") == null ? "" : $(node).find("span[style]:last").text();
-                if (text && r.test(text)) {
+                var text = $(node).find("span[style]:last").text();
+                if (text && r.test(text) && node) {
                     console.log(node);
                     $(node).css({
                         "display": "none"
-                    })
+                    });
                 }
             })
         })
