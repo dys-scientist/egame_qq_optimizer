@@ -11,7 +11,7 @@
         "default_icon": "icon.png"
     },
     "permissions":[
-        "https://egame.qq.com/77777",
+        "https://egame.qq.com/",
         "tabs"
     ],
     "background":{
@@ -19,7 +19,7 @@
         "persistent": false
     },
     "content_scripts":[{
-        "matches": ["https://egame.qq.com/77777*"],
+        "matches": ["https://egame.qq.com/*"],
 		"js": ["jquery-2.2.1.min.js","main.js"],   
 		"run_at": "document_end"
     }]
